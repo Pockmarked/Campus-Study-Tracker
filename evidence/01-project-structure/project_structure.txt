@@ -1,0 +1,54 @@
+=== STRUKTUR DIREKTORI PROYEK: CAMPUS STUDY TRACKER ===
+Mahasiswa: Mochammad Nadhif Athallah (102062400144)
+Mata Kuliah: Komputasi Awan (Cloud Computing)
+
+Bopeng/
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── compose.yaml
+├── Dockerfile
+├── package.json
+├── package-lock.json
+├── README.md
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── DEPLOYMENT_GUIDE.md
+│   ├── DOCKER_EXPLANATION.md
+│   ├── PANDUAN_DEPLOY_AZURE.md
+│   ├── PANDUAN_LAPORAN_LENGKAP.md
+│   ├── REQUIREMENTS_MATRIX.md
+│   ├── SECURITY.md
+│   ├── TESTING_GUIDE.md
+│   └── TROUBLESHOOTING.md
+├── evidence/
+│   ├── 01-project-structure/
+│   ├── 02-container-status/
+│   ├── 03-public-access/
+│   ├── 04-azure-overview/
+│   ├── 05-data-persistence/
+│   ├── 06-network-security/
+│   └── 07-restart-test/
+├── public/
+│   ├── index.html
+│   ├── css/style.css
+│   └── js/app.js
+├── scripts/
+│   ├── deploy-azure.sh
+│   ├── package-project.ps1
+│   ├── test-local.ps1
+│   └── verify-evidence.sh
+├── src/
+│   ├── app.js
+│   ├── server.js
+│   ├── config/environment.js
+│   ├── controllers/studyController.js
+│   ├── database/db.js
+│   ├── database/migrate.js
+│   ├── middleware/errorHandler.js
+│   ├── routes/healthRoutes.js
+│   ├── routes/studyRoutes.js
+│   └── services/studyService.js
+└── tests/
+    ├── api.test.js
+    └── integration.test.js

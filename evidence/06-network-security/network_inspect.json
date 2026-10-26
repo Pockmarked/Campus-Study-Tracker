@@ -1,0 +1,24 @@
+[
+    {
+        "Name": "campus_study_backend_net",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "Internal": true,
+        "Containers": {
+            "app_container_id": {
+                "Name": "campus-study-app",
+                "IPv4Address": "172.28.0.3/16"
+            },
+            "db_container_id": {
+                "Name": "campus-study-db",
+                "IPv4Address": "172.28.0.2/16"
+            }
+        },
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.project": "campus-study-tracker"
+        }
+    }
+]

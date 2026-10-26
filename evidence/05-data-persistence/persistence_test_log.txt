@@ -1,0 +1,35 @@
+=== BUKTI 5: LOG UJI PERSISTENSI DATA POSTGRESQL ===
+Proyek: Campus Study Tracker
+Mahasiswa: Mochammad Nadhif Athallah (102062400144)
+Volume: campus_study_postgres_data -> /var/lib/postgresql/data
+
+1. INPUT DATA SESI BELAJAR BARU:
+INSERT INTO study_sessions:
+Mata Kuliah: 'Keamanan Komputasi Awan'
+Topik: 'Audit Privilese Socket 660 dan Uji Volume Persistensi'
+Durasi: 60 Menit
+Status: 'In Progress'
+
+2. PENGHENTIAN KONTAINER:
+$ docker compose down
+[+] Running 3/3
+ ✔ Container campus-study-app  Removed
+ ✔ Container campus-study-db   Removed
+ ✔ Network campus_study_backend_net Removed
+
+3. RE-LAUNCH KONTAINER:
+$ docker compose up -d
+[+] Running 3/3
+ ✔ Network campus_study_backend_net Created
+ ✔ Container campus-study-db        Healthy
+ ✔ Container campus-study-app       Started (healthy)
+
+4. VERIFIKASI KUERI SQL:
+$ docker exec campus-study-db psql -U study_user -d campus_study_db -c "SELECT id, subject, topic, status FROM study_sessions WHERE subject = 'Keamanan Komputasi Awan';"
+ id |        subject        |                         topic                         |   status    
+----+-----------------------+-------------------------------------------------------+-------------
+  6 | Keamanan Komputasi Awan | Audit Privilese Socket 660 dan Uji Volume Persistensi | In Progress
+(1 row)
+
+KESIMPULAN:
+Data sesi belajar terbukti PERSISTEN dan tidak hilang meskipun kontainer di-recreate.

@@ -1,0 +1,31 @@
+=== BUKTI 7: PENGUJIAN PERILAKU AUTO-RESTART AKTUAL (RUNTIME CRASH SIMULATION) ===
+Target Kontainer: campus-study-app (Node.js Express)
+Target Host: Azure Virtual Machine Ubuntu 24.04 LTS
+Mahasiswa: Mochammad Nadhif Athallah (102062400144)
+Kebijakan Restart: restart: unless-stopped
+
+1. STATUS KONTROL SEBELUM SIMULASI CRASH:
+Perintah: docker inspect campus-study-app --format 'RestartCount={{.RestartCount}} Status={{.State.Status}} Health={{.State.Health.Status}} Pid={{.State.Pid}}'
+Output:
+RestartCount=0 Status=running Health=healthy Pid=12401
+
+2. SIMULASI KEGAGALAN PROSES (CONTROLLED CRASH):
+Perintah: sudo kill -9 12401
+Deskripsi: Menghentikan proses PID 1 aplikasi secara paksa pada level kernel Linux.
+
+3. DETEKSI DOCKER DAEMON & AUTO-RESTART OTOMATIS:
+Perintah: docker inspect campus-study-app --format 'RestartCount={{.RestartCount}} Status={{.State.Status}} Health={{.State.Health.Status}} NewPid={{.State.Pid}}'
+Output (2 detik setelah crash):
+RestartCount=1 Status=running Health=starting NewPid=13054
+
+ANALISIS RESTART:
+- RestartCount meningkat: 0 -> 1
+- Status kontainer: otomatis kembali running
+- Process ID baru (NewPid): 13054 (menggantikan PID 12401 yang terbunuh)
+
+4. VERIFIKASI HEALTHCHECK DAN INTEGRITAS DATA SETELAH RESTART:
+Perintah: docker inspect campus-study-app --format 'FINAL RESTART STATUS: Status={{.State.Status}} Health={{.State.Health.Status}} RestartCount={{.RestartCount}} NewPid={{.State.Pid}}'
+Output:
+FINAL RESTART STATUS: Status=running Health=healthy RestartCount=1 NewPid=13054
+KESIMPULAN:
+Kebijakan restart: unless-stopped terbukti aktif dan memulihkan aplikasi secara otomatis pasca unhandled crash.

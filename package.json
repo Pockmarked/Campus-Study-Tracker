@@ -1,0 +1,28 @@
+{
+  "name": "campus-study-tracker",
+  "version": "1.0.0",
+  "description": "Aplikasi Manajemen Sesi & Aktivitas Belajar Mahasiswa (Cloud Docker Edition)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/api.test.js",
+    "test:integration": "node --test tests/integration.test.js",
+    "migrate": "node src/database/migrate.js"
+  },
+  "keywords": [
+    "cloud-computing",
+    "docker",
+    "docker-compose",
+    "express",
+    "postgresql",
+    "azure-vm"
+  ],
+  "author": "Mochammad Nadhif Athallah (102062400144)",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  }
+}

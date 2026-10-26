@@ -1,0 +1,21 @@
+=== AUDIT & REMEDIASI KEAMANAN DOCKER SOCKET ===
+Target: Azure Virtual Machine Ubuntu 24.04 LTS
+File Socket: /var/run/docker.sock
+Mahasiswa: Mochammad Nadhif Athallah (102062400144)
+
+1. IDENTIFIKASI RISIKO:
+Socket Docker tidak boleh diatur ke mode 666 (world-writable) karena dapat dieksploitasi oleh pengguna non-privilese.
+
+2. TINDAKAN REMEDIASI HARDENING:
+Perintah:
+sudo chown root:docker /var/run/docker.sock
+sudo chmod 660 /var/run/docker.sock
+sudo usermod -aG docker $USER
+
+3. HASIL VERIFIKASI PERMISSION & GROUP:
+Perintah: ls -la /var/run/docker.sock
+Output:
+srw-rw---- 1 root docker 0 /var/run/docker.sock
+
+4. OPERASIONAL DOCKER NON-ROOT:
+Pengguna menjalankan perintah docker compose ps secara aman tanpa perlu sudo.

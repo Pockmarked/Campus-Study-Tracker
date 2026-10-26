@@ -1,0 +1,9 @@
+=== BUKTI 2: LOG STATUS KONTAINER DOCKER COMPOSE ===
+Proyek: Campus Study Tracker
+Mahasiswa: Mochammad Nadhif Athallah (102062400144)
+
+Perintah: docker compose ps
+Output:
+NAME               IMAGE                     COMMAND                  SERVICE    CREATED          STATUS                    PORTS
+campus-study-app   bopeng-app                "docker-entrypoint.s…"   app        10 minutes ago   Up 10 minutes (healthy)   0.0.0.0:80->3000/tcp, [::]:80->3000/tcp
+campus-study-db    postgres:16-alpine        "docker-entrypoint.s…"   database   10 minutes ago   Up 10 minutes (healthy)   5432/tcp

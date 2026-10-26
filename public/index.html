@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Study Tracker - Cloud Docker Edition | Mochammad Nadhif Athallah</title>
+  <meta name="description" content="Aplikasi Pelacak Target Belajar Mahasiswa Berbasis Multi-Container Docker dan PostgreSQL pada Azure Virtual Machine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Background Glow Effects -->
+  <div class="bg-glow glow-top-left"></div>
+  <div class="bg-glow glow-bottom-right"></div>
+
+  <div class="app-container">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <polyline points="10 8 13 11 16 8"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">Campus Study Tracker</h1>
+          <p class="brand-subtitle">Cloud Multi-Container Orchestration &amp; Academic Session Manager</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="student-pill" id="studentBadge">
+          <span class="pill-dot"></span>
+          <span class="student-name">Mochammad Nadhif Athallah</span>
+          <span class="student-nim">102062400144</span>
+        </div>
+        <div class="health-pill" id="healthPill" title="Status Koneksi Backend & Database">
+          <span class="health-indicator"></span>
+          <span id="healthStatusText">Checking DB...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tech Stack Pill Row -->
+    <section class="tech-stack-row">
+      <div class="tech-badge"><span class="badge-icon">🐳</span> Docker Compose v2</div>
+      <div class="tech-badge"><span class="badge-icon">⚡</span> Node.js 20 Alpine</div>
+      <div class="tech-badge"><span class="badge-icon">🐘</span> PostgreSQL 16 (Isolated Network)</div>
+      <div class="tech-badge"><span class="badge-icon">💾</span> Volume: study_postgres_data</div>
+      <div class="tech-badge"><span class="badge-icon">☁️</span> Azure Virtual Machine</div>
+    </section>
+
+    <!-- Metrics / Stats Cards -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon icon-indigo">📚</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Sesi</span>
+          <h3 class="stat-value" id="statTotalSessions">0</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-cyan">⏱️</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Waktu Belajar</span>
+          <h3 class="stat-value" id="statTotalHours">0 <small>Jam</small></h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-amber">⏳</div>
+        <div class="stat-info">
+          <span class="stat-label">Dalam Proses / Menunggu</span>
+          <h3 class="stat-value" id="statPendingSessions">0</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-emerald">✅</div>
+        <div class="stat-info">
+          <span class="stat-label">Sesi Selesai</span>
+          <h3 class="stat-value" id="statCompletedSessions">0</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls Bar (Search, Filters, Add Button) -->
+    <section class="controls-bar">
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Cari mata kuliah, topik, atau catatan...">
+      </div>
+
+      <div class="filter-group">
+        <div class="select-wrapper">
+          <select id="statusFilter">
+            <option value="All">Semua Status</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="select-wrapper">
+          <select id="priorityFilter">
+            <option value="All">Semua Prioritas</option>
+            <option value="High">Tinggi (High)</option>
+            <option value="Medium">Sedang (Medium)</option>
+            <option value="Low">Rendah (Low)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" id="openAddModalBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Tambah Sesi Baru
+        </button>
+      </div>
+    </section>
+
+    <!-- Sessions List View -->
+    <main class="sessions-container">
+      <div class="sessions-header">
+        <h2 class="section-title">Daftar Rencana Sesi Belajar</h2>
+        <span class="session-count-tag" id="sessionCountTag">0 Sesi Terdaftar</span>
+      </div>
+
+      <div class="sessions-grid" id="sessionsGrid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Memuat data sesi dari database PostgreSQL...</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Information -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <p><strong>Campus Study Tracker</strong> &bull; Praktikum Komputasi Awan (Cloud Computing)</p>
+        <p class="footer-credit">Dibuat oleh: <span class="highlight">Mochammad Nadhif Athallah</span> (NIM: <span class="highlight">102062400144</span>)</p>
+      </div>
+      <div class="footer-right">
+        <div class="architecture-tag">
+          <span>Azure VM Deployment</span> &bull; <span>Docker Compose</span> &bull; <span>PostgreSQL Persistent</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal Tambah / Edit Sesi Belajar -->
+  <div class="modal-overlay" id="sessionModalOverlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tambah Sesi Belajar Baru</h3>
+        <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <form id="sessionForm">
+        <input type="hidden" id="sessionId" value="">
+
+        <div class="form-group">
+          <label for="formSubject">Mata Kuliah <span class="required">*</span></label>
+          <input type="text" id="formSubject" required placeholder="Contoh: Komputasi Awan, Rekayasa Perangkat Lunak">
+        </div>
+
+        <div class="form-group">
+          <label for="formTopic">Topik / Materi Pembahasan <span class="required">*</span></label>
+          <input type="text" id="formTopic" required placeholder="Contoh: Orchestration Multi-Container Docker & Azure">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="formDuration">Durasi (Menit) <span class="required">*</span></label>
+            <input type="number" id="formDuration" min="15" step="15" value="60" required>
+          </div>
+          <div class="form-group">
+            <label for="formTargetDate">Target Tanggal <span class="required">*</span></label>
+            <input type="date" id="formTargetDate" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="formPriority">Tingkat Prioritas</label>
+            <select id="formPriority">
+              <option value="High">Tinggi (High)</option>
+              <option value="Medium" selected>Sedang (Medium)</option>
+              <option value="Low">Rendah (Low)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="formStatus">Status Progres</label>
+            <select id="formStatus">
+              <option value="Pending" selected>Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="formNotes">Catatan / Detail Tambahan</label>
+          <textarea id="formNotes" rows="3" placeholder="Catatan penting, link materi, referensi modul praktikum..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelModalBtn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="saveSessionBtn">Simpan Sesi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

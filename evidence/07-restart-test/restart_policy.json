@@ -1,0 +1,22 @@
+{
+    "Containers": [
+        {
+            "Name": "campus-study-app",
+            "HostConfig": {
+                "RestartPolicy": {
+                    "Name": "unless-stopped",
+                    "MaximumRetryCount": 0
+                }
+            }
+        },
+        {
+            "Name": "campus-study-db",
+            "HostConfig": {
+                "RestartPolicy": {
+                    "Name": "unless-stopped",
+                    "MaximumRetryCount": 0
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment Variables & Credentials
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+
+# Build & Archives
+*.tar.gz
+*.zip
+dist/
+build/
+
+# Logs & Debug
+logs/
+*.log
+npm-debug.log*
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
